@@ -9,8 +9,10 @@
 
 // urllib is required to make API calls
 var urllib = require('urllib'),
-    myInsertKey = $secure.ADMIN_API,
-    myAccountID = '{YOUR_ACCOUNT_ID}',
+    latestVersion = '0.5.2',
+    myAdminKey = '{MyAdminAPIKey}',
+    myAccountID = '{MyAccountID}',
+    myInsertKey = '{MyInsertKey}',
     apiUri = 'https://synthetics.newrelic.com/synthetics/api/v3/monitors/',
     monitors = [],
     startTime = Date.now(),
@@ -42,7 +44,7 @@ let getMonitors = (url, monitors, resolve, reject) => {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'X-Api-Key': myInsertKey,
+      'X-Api-Key': myAdminKey,
     }
   }, function(err, data, res) {
     if(err){
@@ -55,10 +57,10 @@ let getMonitors = (url, monitors, resolve, reject) => {
 
     // Create a new Event for each monitor that is less than v0.5.2
     mons.forEach((mon) => {
-      if(mon.apiVersion !== '0.5.2'){ 
+      if(mon.apiVersion !== latestVersion){ 
         let newEvent = {
           eventType: 'OutdatedMonitors',
-          link: 'https://synthetics.newrelic.com/accounts/1970369/monitors/'+ mon.id +'/edit',
+          link: 'https://synthetics.newrelic.com/accounts/' + myAccountID + '/monitors/'+ mon.id +'/edit',
           version: mon.apiVersion,
           name: mon.name
         }
@@ -93,11 +95,11 @@ new Promise((resolve, reject) => {
     log("Final Monitors", response);
 
     // Send the Events to Insights
-    return urllib.request('https://insights-collector.newrelic.com/v1/accounts/1970369/events', {
+    return urllib.request('https://insights-collector.newrelic.com/v1/accounts/' + myAccountID + '/events', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-Insert-Key': ' fQHcoXV46sOTDK-pi4viTMt3krVK2Vsg ',
+            'X-Insert-Key': myInsertKey,
           },
           data: response
         }, function(err, data, res){
