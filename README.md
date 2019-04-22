@@ -7,9 +7,9 @@ With that in mind, I decided to keep this in the family and write a Synthetics S
 
 All you need to run it is:
 
- - Admin API Key
- - Insights Insert Key
- - Your Account ID
+- Admin API Key
+- Insights Insert Key
+- Your Account ID
 
 
 You can either paste them into the script directly, but if you already have them as Secure Credentials then even better. And that's it! Just Validate the script and make sure you see a *200* Response in the Log. Then you should be able to query the data in Insights.
